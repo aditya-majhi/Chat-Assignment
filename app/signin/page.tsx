@@ -9,27 +9,25 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import Link from "next/link";
 
 const SignIn = () => {
-  //   const { data: session, status } = useSession();
+  const { data: session, status } = useSession();
   const router = useRouter();
-  //   const searchParams = useSearchParams();
   const [loading, setLoading] = useState<string | null>(null);
-  //   const error = searchParams.get("error");
 
-  //   if (status === "loading") {
-  //     return (
-  //       <div className="flex items-center justify-center min-h-screen bg-linear-to-br from-purple-50 to-pink-100">
-  //         <div className="text-center">
-  //           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4"></div>
-  //           <p className="text-gray-600">Authenticating...</p>
-  //         </div>
-  //       </div>
-  //     );
-  //   }
+  if (status === "loading") {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-linear-to-br from-purple-50 to-pink-100">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Authenticating...</p>
+        </div>
+      </div>
+    );
+  }
 
-  //   if (session) {
-  //     router.push("/");
-  //     return null;
-  //   }
+  if (session) {
+    router.push("/");
+    return null;
+  }
 
   const handleSignIn = async (provider: string) => {
     setLoading(provider);
@@ -52,15 +50,6 @@ const SignIn = () => {
             Create or access your account instantly
           </p>
         </div>
-
-        {/* Error Message */}
-        {/* {error && (
-          <Alert variant="destructive" className="mb-4">
-            <AlertDescription>
-              Authentication failed. Please try again.
-            </AlertDescription>
-          </Alert>
-        )} */}
 
         {/* Sign In Options */}
         <div className="space-y-3">
