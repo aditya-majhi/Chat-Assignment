@@ -11,9 +11,9 @@ import Link from "next/link";
 const SignIn = () => {
   //   const { data: session, status } = useSession();
   const router = useRouter();
-  const searchParams = useSearchParams();
+  //   const searchParams = useSearchParams();
   const [loading, setLoading] = useState<string | null>(null);
-  const error = searchParams.get("error");
+  //   const error = searchParams.get("error");
 
   //   if (status === "loading") {
   //     return (
@@ -54,13 +54,13 @@ const SignIn = () => {
         </div>
 
         {/* Error Message */}
-        {error && (
+        {/* {error && (
           <Alert variant="destructive" className="mb-4">
             <AlertDescription>
               Authentication failed. Please try again.
             </AlertDescription>
           </Alert>
-        )}
+        )} */}
 
         {/* Sign In Options */}
         <div className="space-y-3">
