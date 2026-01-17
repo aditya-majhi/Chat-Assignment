@@ -1,7 +1,7 @@
 import "dotenv/config";
 import { defineConfig } from "drizzle-kit";
 
-console.log(process.env.DATABASE_URI);
+console.log(process.env.DATABASE_URL);
 
 
 export default defineConfig({
@@ -10,7 +10,7 @@ export default defineConfig({
     out: "./drizzle",
 
     dbCredentials: {
-        url: process.env.DATABASE_URI!,
+        url: process.env.DATABASE_URL!,
     },
 
     strict: true,

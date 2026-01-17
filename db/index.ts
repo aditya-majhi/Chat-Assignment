@@ -4,7 +4,7 @@ import postgres from "postgres";
 import * as schema from "./schema";
 
 // Supabase requires SSL
-const client = postgres(process.env.DATABASE_URI!, {
+const client = postgres(process.env.DATABASE_URL!, {
     ssl: "require",
 });
 
