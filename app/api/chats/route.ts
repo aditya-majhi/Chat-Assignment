@@ -47,6 +47,27 @@ export async function POST(request: NextRequest) {
             });
         }
 
+        //Save user message to DB
+        const userMessageId = generateId();
+        await db.insert(messages).values({
+            id: userMessageId,
+            conversationId: currChatId!,
+            content: userMessage,
+            role: "user",
+            kind: "text",
+            createdAt: new Date(),
+        });
+
+        let lastMessage: {
+            id: string;
+            conversationId: string;
+            content: any;
+            role: "assistant";
+            kind: "text" | "tool";
+            toolName?: string | null;
+            createdAt: Date;
+        } | null = null
+
         const { text: aiResponse, steps } = await generateText({
             model: google("gemini-2.5-flash"),
             system:
@@ -65,25 +86,30 @@ export async function POST(request: NextRequest) {
             onStepFinish: async ({ text, toolCalls, toolResults }) => {
                 console.log({ text, toolCalls, toolResults: toolResults[0]?.output });
 
-                if (text?.length) {
-                    await db.insert(messages).values({
-                        id: generateId(),
-                        conversationId: currChatId!,
-                        content: text,
-                        role: "assistant",
-                        kind: "text",
-                        createdAt: new Date(),
-                    });
-                } else if (toolCalls?.length && toolResults?.length) {
-                    await db.insert(messages).values({
+                if (toolCalls?.length && toolResults?.length) {
+                    const msg = {
                         id: generateId(),
                         conversationId: currChatId!,
                         content: toolResults[0]?.output,
-                        role: "assistant",
-                        kind: "tool",
+                        role: "assistant" as const,
+                        kind: "tool" as const,
                         toolName: toolCalls[0]?.toolName,
                         createdAt: new Date(),
-                    });
+                    };
+                    await db.insert(messages).values(msg);
+                    lastMessage = msg;
+                } else if (text?.length) {
+                    const msg = {
+                        id: generateId(),
+                        conversationId: currChatId!,
+                        content: text,
+                        role: "assistant" as const,
+                        kind: "text" as const,
+                        toolName: null,
+                        createdAt: new Date(),
+                    };
+                    await db.insert(messages).values(msg);
+                    lastMessage = msg;
                 }
 
             }
@@ -94,7 +120,7 @@ export async function POST(request: NextRequest) {
         return new Response(
             JSON.stringify({
                 chatId: currChatId,
-                message: aiResponse,
+                message: lastMessage,
             }),
             { status: 200, headers: { "Content-Type": "application/json" } }
         );

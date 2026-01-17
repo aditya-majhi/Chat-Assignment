@@ -15,7 +15,12 @@ const stockPriceTool = tool({
         console.log({ stockData: stockData.data });
 
         return {
-            stockData: stockData.data["Global Quote"]
+            stockData: {
+                symbol: stockData.data["Global Quote"]["01. symbol"],
+                price: stockData.data["Global Quote"]["05. price"],
+                volume: stockData.data["Global Quote"]["06. volume"],
+                latestTradingDay: stockData.data["Global Quote"]["07. latest trading day"],
+            }
         }
     }
 })
